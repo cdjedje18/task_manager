@@ -3,6 +3,7 @@ const { getPageCount } = require('../utils/helpers');
 const { queryBuilder, paginationOptions } = require('../common/queryBuilder');
 const { singleDBQuery, multipleDBQuery } = require('../common/dataHandler');
 const { apiResponse } = require('../common/apiResponse');
+const validateData = require('../common/validation');
 
 
 
@@ -43,33 +44,35 @@ const taskController = {
         let task = await Task.findOne({ where: { id: id } })
         if (!task) {
             res.status(404).send(apiResponse(404, "Data not found", null))
-        }else{
+        } else {
             res.status(200).send(task)
         }
-        
+
     },
     store: async (req, res) => {
         // console.log(req.body)
 
         let response = null;
 
-        if (req?.body?.tasks) {
+        let validationStatus = await validateData(req.body, {
+            name: 'required'
+        })
 
-            //validation
-            //data insert
-            let importSummary = await multipleDBQuery(Task, req?.body?.tasks, req?.query?.delete)
-            response = apiResponse(req?.query?.delete ? 200 : 201, req?.query?.delete ? "Data Deleted" : "Data Created", importSummary)
-
+        if (!validationStatus.validationPasses) {
+            console.log("i was here")
+            response = apiResponse(409, "Data Validation Fails", { conflicts: validationStatus.validationErrors })
         } else {
+            if (req?.body?.tasks) {
+                let importSummary = await multipleDBQuery(Task, req?.body?.tasks, req?.query?.delete)
+                response = apiResponse(req?.query?.delete ? 200 : 201, req?.query?.delete ? "Data Deleted" : "Data Created", importSummary)
 
-            //validation
-            //data insert
-            let importSummary = await singleDBQuery(Task, req.body)
-            response = apiResponse(201, "Data Created", importSummary)
-
+            } else {
+                let importSummary = await singleDBQuery(Task, req.body)
+                response = apiResponse(201, "Data Created", importSummary)
+            }
         }
 
-        res.status(201).send(response);
+        res.status(response.httpStatusCode).send(response);
 
     },
     update: async (req, res) => {

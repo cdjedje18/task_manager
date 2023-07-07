@@ -93,3 +93,21 @@ Lista de taferas usando apenas os atributos nome e descrição
 
 Lista de taferas usando apenas os atributos nome e descrição e aplicando filtro pela descrição
 > /api/tasks?fields=name,description&filters=description:like:urgente
+
+### Actualização de Tarefa
+Pra efectuar actualizações das tarefas usamos o seguinte recurso:
+> PUT
+> /api/tasks/{task-id}
+
+Exemplo
+> PUT
+> /api/tasks/yxu1Ba3BTfz
+
+```json
+{
+    "name": "Task updated",
+    "description": "Demo description"
+}
+```
+
+##### _NB: Opção de actualização_

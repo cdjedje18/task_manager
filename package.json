@@ -16,7 +16,8 @@
     "express": "^4.18.2",
     "mysql2": "^3.4.4",
     "sequelize": "^6.32.1",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "validatorjs": "^3.22.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
