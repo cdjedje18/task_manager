@@ -1,5 +1,5 @@
 const db = require('../models');
-const { generateId, getPageCount } = require('../utils/helpers');
+const { getPageCount } = require('../utils/helpers');
 const { queryBuilder, paginationOptions } = require('../common/queryBuilder');
 const { singleDBQuery, multipleDBQuery } = require('../common/dataHandler');
 const { apiResponse } = require('../common/apiResponse');
@@ -41,7 +41,12 @@ const taskController = {
     show: async (req, res) => {
         let id = req.params.id
         let task = await Task.findOne({ where: { id: id } })
-        res.status(200).send(task)
+        if (!task) {
+            res.status(404).send(apiResponse(404, "Data not found", null))
+        }else{
+            res.status(200).send(task)
+        }
+        
     },
     store: async (req, res) => {
         // console.log(req.body)
@@ -70,13 +75,19 @@ const taskController = {
     update: async (req, res) => {
         let response = null;
         let id = req.params.id;
-        let result = await Task.update(req.body, { where: { id: id } });
-        if (result) {
-            let task = await Task.findOne({ where: { id: id } })
-            res.status(200).send({ status: 200, task: task });
-            response = apiResponse(201, "Data Updated", task)
+
+        let task = await Task.findOne({ where: { id: id } })
+
+        if (!task) {
+            response = apiResponse(404, "Data not found", null)
         } else {
-            response = apiResponse(500, "Internal Server Error", null)
+            let result = await Task.update(req.body, { where: { id: id } });
+            if (result) {
+                let task = await Task.findOne({ where: { id: id } })
+                response = apiResponse(200, "Data Updated", task)
+            } else {
+                response = apiResponse(500, "Internal Server Error", null)
+            }
         }
 
         res.status(response.httpStatusCode).send(response);
@@ -85,14 +96,19 @@ const taskController = {
     delete: async (req, res) => {
         let response = null;
         let id = req.params.id;
-        let result = await Task.destroy({ where: { id: id } });
-        if (result) {
-            
-            response = apiResponse(200, "Data Deleted", null)
-        } else {
-            response = apiResponse(500, "Internal Server Error", null)
-        }
 
+        let task = await Task.findOne({ where: { id: id } })
+
+        if (!task) {
+            response = apiResponse(404, "Data not found", null)
+        } else {
+            let result = await Task.destroy({ where: { id: id } });
+            if (result) {
+                response = apiResponse(200, "Data Deleted", null)
+            } else {
+                response = apiResponse(500, "Internal Server Error", null)
+            }
+        }
         res.status(response.httpStatusCode).send(response);
 
     }
