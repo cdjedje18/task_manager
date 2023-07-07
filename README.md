@@ -111,3 +111,41 @@ Exemplo
 ```
 
 ##### _NB: Opção de actualização_
+É possível fazer a actualização usando o método POST, passando o identificador das tarefas, esta funcionalidade permite fazer a actualização de várias tarefas é uma requisição. De seguida alguns exemplos da utilização deste recurso:
+> POST
+> /api/tasks
+
+```json
+{
+    "id": "eOnwmsWUabI",
+    "name": "Task 1",
+    "description": "Demo description"
+}
+```
+
+Actualização de multiplas tarefas
+
+> POST
+> /api/tasks
+
+```json
+{
+    "tasks": [
+        {
+            "id": "eOnwmsWUabz",
+            "name": "Task 1",
+            "description": "Demo description"
+        },
+        {
+            "id": "sOnwmsWUabz",
+            "name": "Task 2",
+            "description": "Demo description"
+        },
+        {
+            "id": "jdnwmsWUabz",
+            "name": "Task 3",
+            "description": "Demo description"
+        }
+    ]
+}
+```
