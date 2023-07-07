@@ -59,7 +59,6 @@ const taskController = {
         })
 
         if (!validationStatus.validationPasses) {
-            console.log("i was here")
             response = apiResponse(409, "Data Validation Fails", { conflicts: validationStatus.validationErrors })
         } else {
             if (req?.body?.tasks) {
