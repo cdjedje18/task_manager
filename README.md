@@ -66,3 +66,30 @@ Este recurso permite a criação de várias tarefas em uma requisição, abaixo 
 ```
 
 ### Lista de tarefas
+Para listar as tarefas criadas basta fazer uso do seguinte endpoint:
+> GET
+> /api/tasks
+
+
+| Parâmentro | Descrição |
+| ------ | ------ |
+| page | Número da página a ser visualizada|
+| pageSize | Esta opção permite definir a quantidade de dados que deseja visualizar por página |
+| paging | Esta opção define que se deseja os dados paginados ou não |
+| fields | Através deste parâmentro é possível escolher os atributos que deseja visualizar |
+| filters | Com este parâmentro é possível aplicar filtros na lista a ser visualizada |
+
+Lista de taferas
+> /api/tasks
+
+Lista de taferas defenindo um tamanho de 100
+> /api/tasks?pageSize=100
+
+Lista de taferas defenindo um tamanho de 100 e visualizando dados da segunda página
+> /api/tasks?pageSize=100&page=2
+
+Lista de taferas usando apenas os atributos nome e descrição
+> /api/tasks?fields=name,description
+
+Lista de taferas usando apenas os atributos nome e descrição e aplicando filtro pela descrição
+> /api/tasks?fields=name,description&filters=description:like:urgente
