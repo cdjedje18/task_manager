@@ -53,17 +53,18 @@ const taskController = {
         // console.log(req.body)
 
         let response = null;
+        let toDelete = req?.query?.delete ? req?.query?.delete : false
 
-        let validationStatus = await validateData(req.body, {
+        let validationStatus = toDelete ? null : await validateData(req?.body?.tasks ? req.body.tasks : req.body, {
             name: 'required'
         })
 
-        if (!validationStatus.validationPasses) {
+        if (!validationStatus?.validationPasses && !toDelete) {
             response = apiResponse(409, "Data Validation Fails", { conflicts: validationStatus.validationErrors })
         } else {
             if (req?.body?.tasks) {
-                let importSummary = await multipleDBQuery(Task, req?.body?.tasks, req?.query?.delete)
-                response = apiResponse(req?.query?.delete ? 200 : 201, req?.query?.delete ? "Data Deleted" : "Data Created", importSummary)
+                let importSummary = await multipleDBQuery(Task, req?.body?.tasks, toDelete)
+                response = apiResponse(req?.query?.delete ? 200 : 201, toDelete ? "Data Deleted" : "Data Created", importSummary)
 
             } else {
                 let importSummary = await singleDBQuery(Task, req.body)

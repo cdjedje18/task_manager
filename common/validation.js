@@ -8,7 +8,7 @@ const validateData = async (data, rules) => {
     if (Array.isArray(data)) {
         for (let item of data) {
             const validation = new Validator(item, rules, null);
-            // console.log(validation.passes(), validation.fails(), validation.errors.errors)
+            console.log(validation.passes(), validation.fails(), validation.errors.errors)
             validationErrors.push(validation.errors.errors)
             if (validation.fails()) {
                 validationPasses = false
